@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <dimen name="md_keylines">8dp</dimen>
+    <dimen name="md_toplines_medicao">0dp</dimen>
+    <dimen name="md_toplines_referencia">0dp</dimen>
+    <dimen name="cards_button_width">48dp</dimen>
+    <dimen name="cards_button_height">48dp</dimen>
+    <dimen name="article_subheading">16sp</dimen>
+    <dimen name="card_image_height">200dp</dimen>
+    <dimen name="card_title_height">40dp</dimen>
+    <dimen name="card_height">510dp</dimen>
+    <dimen name="card_height_detail">220dp</dimen>
+    <dimen name="card_height_medicao">160dp</dimen>
+    <dimen name="card_height_correcao">140dp</dimen>
+    <dimen name="list_body_calibragem">14sp</dimen>
+    <dimen name="md_toplines_detalhe">0dp</dimen>
+    <dimen name="card_height_detalhe">190dp</dimen>
+    <dimen name="card_height_calibration_header">80dp</dimen>
+
+
+
+</resources>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/configuracao"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/toolbarConfiguration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <TextView
+            android:id="@+id/numberAverageMeasureTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/numberAverageMeasure"
+            android:layout_alignBottom="@+id/numberAverageMeasure"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="28dp"
+            android:text="@string/number_average_measure"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <EditText
+            android:id="@+id/numberAverageMeasure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@+id/numberAverageCalibrationTitle"
+            android:inputType="number"
+            android:text="1"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorMediumGrey" />
+
+        <EditText
+            android:id="@+id/numberAverageCalibration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/numberAverageCalibrationTitle"
+            android:layout_alignBottom="@+id/numberAverageCalibrationTitle"
+            android:layout_alignStart="@+id/numberAverageMeasure"
+            android:inputType="number"
+            android:text="1"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorMediumGrey" />
+
+        <TextView
+            android:id="@+id/numberAverageCalibrationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/numberAverageMeasureTitle"
+            android:layout_below="@+id/numberAverageMeasure"
+            android:layout_marginTop="12dp"
+            android:text="@string/number_average_calibration"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <TextView
+            android:id="@+id/numberThresholdTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/numberAverageCalibrationTitle"
+            android:layout_below="@+id/numberAverageCalibration"
+            android:layout_marginTop="14dp"
+            android:text="@string/number_threshold"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <EditText
+            android:id="@+id/numberThreshold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/numberThresholdTitle"
+            android:layout_alignBottom="@+id/numberThresholdTitle"
+            android:layout_alignStart="@+id/numberAverageCalibration"
+            android:inputType="number"
+            android:text="1"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorMediumGrey" />
+
+        <Button
+            android:id="@+id/buttonSaveConfiguration"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_save_configuration"
+            android:textColor="?attr/colorPrimary"
+            android:layout_marginTop="31dp"
+            android:layout_below="@+id/numberThreshold"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_medicao"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/card_height_medicao"
+    android:layout_marginTop="@dimen/md_toplines_medicao"
+    android:layout_marginBottom="@dimen/md_keylines"
+    android:layout_marginLeft="@dimen/md_keylines"
+    android:layout_marginRight="@dimen/md_keylines"
+    android:foreground="?attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/measureCorrectedFactorTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/corrected_factor_textview_title"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem"
+            android:layout_below="@+id/measureFactorTextViewTitle"
+            android:layout_alignStart="@+id/measureFactorTextViewTitle" />
+
+        <TextView
+            android:id="@+id/measureIntensityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/measureIntensityReferenceTextView"
+            android:layout_marginStart="14dp"
+            android:layout_toEndOf="@+id/measureIntensityReferenceTextViewTitle"
+            android:text="TextView"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <TextView
+            android:id="@+id/measureIntensityReferenceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/measureIntensityReferenceTextViewTitle"
+            android:layout_alignBottom="@+id/measureIntensityReferenceTextViewTitle"
+            android:layout_alignStart="@+id/measureIntensityTextView"
+            android:text="TextView"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <TextView
+            android:id="@+id/measureIntensityTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/measureIntensityReferenceTextViewTitle"
+            android:layout_marginStart="30dp"
+            android:text="@string/measure_intensity_textview_title"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <TextView
+            android:id="@+id/measureIntensityReferenceTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/measure_intensity_reference_textview_title"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem"
+            android:layout_below="@+id/measureTextViewTitle"
+            android:layout_alignStart="@+id/measureIntensityTextViewTitle"
+            android:layout_marginTop="17dp" />
+
+        <TextView
+            android:id="@+id/correctedFactorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem"
+            android:layout_below="@+id/measureFactorTextView"
+            android:layout_alignStart="@+id/measureFactorTextView" />
+
+        <TextView
+            android:id="@+id/measureFactorTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/measureIntensityTextViewTitle"
+            android:text="@string/measure_factor_textview_title"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem"
+            android:layout_below="@+id/measureIntensityTextViewTitle" />
+
+        <TextView
+            android:id="@+id/measureFactorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/measureIntensityTextView"
+            android:layout_below="@+id/measureIntensityTextView"
+            android:text="TextView"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <TextView
+            android:id="@+id/measureTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="21dp"
+            android:text="@string/measure_title"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="@dimen/article_subheading"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/measureIntensityReferenceTextViewTitle" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="@dimen/md_keylines">
+
+    <TextView
+        android:id="@+id/mediumItemCalibrationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/md_keylines"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textSize="@dimen/article_subheading"
+        tools:text="@string/medium_title"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/refractiveIndexItemCalibrationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/md_keylines"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="@dimen/list_body_calibragem"
+        tools:text="@string/medium_refractive_index_title"
+        android:layout_below="@+id/mediumItemCalibrationTitle"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/buttonMeasureItemCalibration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="?attr/colorPrimary"
+        android:text="@string/action_measure_calibration"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <ProgressBar
+        android:id="@+id/progressBarItemCalibration"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginEnd="17dp"
+        android:layout_below="@+id/refractiveIndexItemCalibration"
+        android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:id="@+id/buttonCheckItemCalibration"
+        android:layout_width="@dimen/cards_button_width"
+        android:layout_height="@dimen/cards_button_height"
+        android:layout_marginRight="@dimen/md_keylines"
+        app:srcCompat="@drawable/icone_check"
+        style="?android:attr/borderlessButtonStyle"
+        android:tint="@color/colorButtonGrey"
+        android:visibility="gone"
+        android:layout_marginEnd="17dp"
+        android:layout_below="@+id/refractiveIndexItemCalibration"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/mediumItemCalibration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/refractiveIndexItemCalibrationTitle"
+        android:layout_toEndOf="@+id/mediumItemCalibrationTitle"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/refractiveIndexItemCalibration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="@dimen/list_body_calibragem"
+        android:layout_alignBottom="@+id/refractiveIndexItemCalibrationTitle"
+        android:layout_toEndOf="@+id/refractiveIndexItemCalibrationTitle"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/factorReferenceItemCalibrationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="@dimen/list_body_calibragem"
+        android:text="@string/factor_reference_item_calibration_title"
+        android:layout_below="@+id/refractiveIndexItemCalibrationTitle"
+        android:visibility="gone"
+        android:layout_alignStart="@+id/refractiveIndexItemCalibrationTitle" />
+
+    <TextView
+        android:id="@+id/factorMeasureItemCalibrationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="@dimen/list_body_calibragem"
+        android:text="@string/factor_measure_item_calibration_title"
+        android:layout_below="@+id/factorReferenceItemCalibrationTitle"
+        android:visibility="gone"
+        android:layout_alignStart="@+id/factorReferenceItemCalibrationTitle" />
+
+    <TextView
+        android:id="@+id/factorReferenceItemCalibration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="@dimen/list_body_calibragem"
+        android:visibility="gone"
+        android:layout_below="@+id/refractiveIndexItemCalibrationTitle"
+        android:layout_toEndOf="@+id/refractiveIndexItemCalibrationTitle"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/factorMeasureItemCalibration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="@dimen/list_body_calibragem"
+        android:visibility="gone"
+        android:layout_alignStart="@+id/factorReferenceItemCalibration"
+        android:layout_below="@+id/factorReferenceItemCalibration"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/factorItemCalibrationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="@dimen/list_body_calibragem"
+        android:text="@string/factor_item_calibration_title"
+        android:layout_below="@+id/factorMeasureItemCalibrationTitle"
+        android:visibility="gone"
+        android:layout_alignStart="@+id/factorMeasureItemCalibrationTitle" />
+
+
+    <TextView
+        android:id="@+id/factorItemCalibration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="@dimen/list_body_calibragem"
+        android:layout_alignStart="@+id/factorMeasureItemCalibration"
+        android:visibility="gone"
+        android:layout_below="@+id/factorMeasureItemCalibration"
+        android:text="" />
+
+</RelativeLayout>

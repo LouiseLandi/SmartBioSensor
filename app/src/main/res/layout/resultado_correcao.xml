@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_correcao"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/card_height_correcao"
+    android:layout_marginTop="@dimen/md_toplines_referencia"
+    android:layout_marginBottom="@dimen/md_keylines"
+    android:layout_marginLeft="@dimen/md_keylines"
+    android:layout_marginRight="@dimen/md_keylines"
+    android:foreground="?attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/correctionIntensityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/colorMediumGrey"
+            android:layout_marginStart="16dp"
+            android:layout_above="@+id/correctionFactorTextView"
+            android:layout_toEndOf="@+id/correctionIntensityReferenceTextViewTitle" />
+
+        <TextView
+            android:id="@+id/correctionIntensityReferenceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/correctionIntensityTextView"
+            android:layout_alignStart="@+id/correctionIntensityTextView"
+            android:text="TextView"
+            android:textColor="@color/colorMediumGrey" />
+
+        <TextView
+            android:id="@+id/correctionIntensityTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/correctionFactorTextView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="26dp"
+            android:text="@string/correction_intensity_textview_title"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <TextView
+            android:id="@+id/correctionIntensityReferenceTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/correctionIntensityTextViewTitle"
+            android:layout_alignStart="@+id/correctionIntensityTextViewTitle"
+            android:text="@string/correction_intensity_reference_textview_title"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <TextView
+            android:id="@+id/correctionFactorTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/correctionIntensityTextViewTitle"
+            android:layout_marginBottom="29dp"
+            android:text="@string/correction_factor_textview_title"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/colorMediumGrey"
+            android:textSize="@dimen/list_body_calibragem" />
+
+        <TextView
+            android:id="@+id/correctionFactorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/colorMediumGrey"
+            android:layout_alignBaseline="@+id/correctionFactorTextViewTitle"
+            android:layout_alignBottom="@+id/correctionFactorTextViewTitle"
+            android:layout_alignStart="@+id/correctionIntensityTextView" />
+
+        <TextView
+            android:id="@+id/correctionTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/correction_title"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="@dimen/article_subheading"
+            android:layout_above="@+id/correctionIntensityReferenceTextViewTitle"
+            android:layout_alignStart="@+id/correctionIntensityReferenceTextViewTitle" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
