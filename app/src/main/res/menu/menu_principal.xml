@@ -3,23 +3,20 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context="com.application.smartbiosensor.Principal">
+
         <item
             android:id="@+id/action_settings"
-            android:orderInCategory="100"
+            android:orderInCategory="200"
             android:title="@string/action_settings"
-            app:showAsAction="never" />
+            android:icon="@drawable/icone_configurar"
+            app:showAsAction="ifRoom" />
 
         <item
             android:id="@+id/action_export"
-            android:orderInCategory="100"
+            android:orderInCategory="300"
             android:title="@string/action_export"
-            app:showAsAction="never" />
-
-        <item
-            android:id="@+id/action_search"
-            android:orderInCategory="200"
-            android:title="@string/action_search"
-            android:icon="@drawable/icone_buscar"
+            android:icon="@drawable/icone_dropbox"
             app:showAsAction="ifRoom" />
+
 
 </menu>

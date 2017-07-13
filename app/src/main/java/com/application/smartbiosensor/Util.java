@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.sql.Date;
 import java.text.DecimalFormat;
+import java.util.Calendar;
 
 public class Util {
 
@@ -65,6 +67,14 @@ public class Util {
         valueFormat = valueFormat.replace(",", ".");
         return Double.valueOf(valueFormat);
 
+    }
+
+    public static Date addDaysToDate(Date date, int days){
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return new java.sql.Date(cal.getTimeInMillis());
     }
 
 }

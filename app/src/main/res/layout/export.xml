@@ -1,16 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.application.smartbiosensor.Export">
 
-    <Button
-        android:id="@+id/exportButton"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="39dp" />
-</android.support.constraint.ConstraintLayout>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/toolbarExport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/exportDropboxTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/export_dropbox_title"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="@dimen/article_subheading"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="34dp" />
+
+        <Button
+            android:id="@+id/exportButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="@string/action_export"
+            android:textColor="?attr/colorPrimary"
+            tools:layout_editor_absoluteX="147dp"
+            tools:layout_editor_absoluteY="39dp"
+            android:layout_below="@+id/finalDate"
+            android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:id="@+id/initialDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorMediumGrey"
+            android:layout_below="@+id/exportDropboxTitle"
+            android:layout_alignStart="@+id/exportButton"
+            android:layout_marginStart="24dp" />
+
+        <EditText
+            android:id="@+id/finalDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorMediumGrey"
+            android:layout_below="@+id/initialDate"
+            android:layout_alignStart="@+id/initialDate" />
+
+        <TextView
+            android:id="@+id/initialDateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/initial_date_title"
+            android:textSize="@dimen/textview_exportacao"
+            android:layout_alignBaseline="@+id/initialDate"
+            android:layout_alignBottom="@+id/initialDate"
+            android:layout_alignStart="@+id/exportDropboxTitle" />
+
+        <TextView
+            android:id="@+id/finalDateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/final_date_title"
+            android:textSize="@dimen/textview_exportacao"
+            android:layout_alignBaseline="@+id/finalDate"
+            android:layout_alignBottom="@+id/finalDate"
+            android:layout_alignStart="@+id/initialDateTitle" />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

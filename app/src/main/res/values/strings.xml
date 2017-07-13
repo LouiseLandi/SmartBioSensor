@@ -30,12 +30,20 @@
     <string name="action_discard_calibration">Descartar</string>
     <string name="action_save_calibration">Salvar</string>
     <string name="action_calibration">Calibrar</string>
-    <string name="number_average_measure">Nº de Médias na Medição:</string>
+    <string name="number_average_measure">Nº de Médias:</string>
     <string name="number_average_calibration">Nº de Médias na Calibração:</string>
     <string name="number_threshold">Threshold:</string>
     <string name="action_save_configuration">Salvar</string>
     <string name="toolbar_configuration">Configuração</string>
     <string name="toolbar_calibration_result">Resultado da Calibração</string>
+    <string name="toolbar_export">Exportação</string>
+    <string name="initial_date_title">Data Inicial:</string>
+    <string name="final_date_title">Data Final:</string>
+    <string name="calibration_title">Calibração</string>
+    <string name="calibration_y">Y    = </string>
+    <string name="calibration_x">X    + </string>
+    <string name="calibration_r2">R²  = </string>
+    <string name="export_dropbox_title">Dropbox</string>
 
 
 </resources>

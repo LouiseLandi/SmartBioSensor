@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/configuracao"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -22,6 +21,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,89 +31,164 @@
 
 
         <TextView
+            android:id="@+id/measureConfigurationTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/measure_title"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="@dimen/article_subheading"
+            android:layout_marginTop="27dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/numberAverageMeasureTitle" />
+
+        <TextView
             android:id="@+id/numberAverageMeasureTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/numberAverageMeasure"
-            android:layout_alignBottom="@+id/numberAverageMeasure"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="28dp"
+            android:layout_marginStart="35dp"
             android:text="@string/number_average_measure"
             android:textColor="@color/colorMediumGrey"
-            android:textSize="@dimen/list_body_calibragem" />
+            android:textSize="@dimen/textview_configuracao"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/measureConfigurationTextViewTitle"
+            android:layout_alignParentStart="true" />
 
         <EditText
             android:id="@+id/numberAverageMeasure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="16dp"
-            android:layout_toEndOf="@+id/numberAverageCalibrationTitle"
             android:inputType="number"
             android:text="1"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textColor="@color/colorMediumGrey" />
-
-        <EditText
-            android:id="@+id/numberAverageCalibration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/numberAverageCalibrationTitle"
-            android:layout_alignBottom="@+id/numberAverageCalibrationTitle"
-            android:layout_alignStart="@+id/numberAverageMeasure"
-            android:inputType="number"
-            android:text="1"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textColor="@color/colorMediumGrey" />
-
-        <TextView
-            android:id="@+id/numberAverageCalibrationTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/numberAverageMeasureTitle"
-            android:layout_below="@+id/numberAverageMeasure"
-            android:layout_marginTop="12dp"
-            android:text="@string/number_average_calibration"
             android:textColor="@color/colorMediumGrey"
-            android:textSize="@dimen/list_body_calibragem" />
+            android:layout_alignBaseline="@+id/numberAverageMeasureTitle"
+            android:layout_alignBottom="@+id/numberAverageMeasureTitle"
+            android:layout_alignStart="@+id/calibrationB" />
 
         <TextView
             android:id="@+id/numberThresholdTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/numberAverageCalibrationTitle"
-            android:layout_below="@+id/numberAverageCalibration"
-            android:layout_marginTop="14dp"
             android:text="@string/number_threshold"
             android:textColor="@color/colorMediumGrey"
-            android:textSize="@dimen/list_body_calibragem" />
+            android:textSize="@dimen/textview_configuracao"
+            android:layout_marginTop="18dp"
+            android:layout_below="@+id/numberAverageMeasureTitle"
+            android:layout_alignStart="@+id/numberAverageMeasureTitle" />
 
         <EditText
             android:id="@+id/numberThreshold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/numberThresholdTitle"
-            android:layout_alignBottom="@+id/numberThresholdTitle"
-            android:layout_alignStart="@+id/numberAverageCalibration"
             android:inputType="number"
             android:text="1"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            android:textColor="@color/colorMediumGrey" />
+            android:textColor="@color/colorMediumGrey"
+            android:layout_alignBaseline="@+id/numberThresholdTitle"
+            android:layout_alignBottom="@+id/numberThresholdTitle"
+            android:layout_alignStart="@+id/numberAverageMeasure" />
 
-        <Button
-            android:id="@+id/buttonSaveConfiguration"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/action_save_configuration"
-            android:textColor="?attr/colorPrimary"
-            android:layout_marginTop="31dp"
-            android:layout_below="@+id/numberThreshold"
-            android:layout_centerHorizontal="true" />
 
-    </RelativeLayout>
-</android.support.design.widget.CoordinatorLayout>
+
+            <TextView
+                android:id="@+id/calibrationConfigurationTextViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="171dp"
+                android:text="@string/calibration_title"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textSize="@dimen/article_subheading"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/measureConfigurationTextViewTitle" />
+
+            <TextView
+                android:id="@+id/calibrationYTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="21dp"
+                android:text="@string/calibration_y"
+                android:textColor="@color/colorMediumGrey"
+                android:textSize="@dimen/textview_configuracao"
+                android:layout_below="@+id/calibrationConfigurationTextViewTitle"
+                android:layout_alignStart="@+id/calibrationConfigurationTextViewTitle" />
+
+            <TextView
+                android:id="@+id/calibrationR2Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/calibration_r2"
+                android:textColor="@color/colorMediumGrey"
+                android:textSize="@dimen/textview_configuracao"
+                android:layout_marginTop="14dp"
+                android:layout_below="@+id/calibrationA"
+                android:layout_alignStart="@+id/calibrationYTitle" />
+
+            <TextView
+                android:id="@+id/calibrationXTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/calibration_x"
+                android:textColor="@color/colorMediumGrey"
+                android:textSize="@dimen/textview_configuracao"
+                android:layout_alignBaseline="@+id/calibrationA"
+                android:layout_alignBottom="@+id/calibrationA"
+                android:layout_toEndOf="@+id/calibrationConfigurationTextViewTitle"
+                android:layout_marginStart="16dp" />
+
+            <EditText
+                android:id="@+id/calibrationB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/calibrationXTitle"
+                android:layout_alignBottom="@+id/calibrationXTitle"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@+id/calibrationXTitle"
+                android:inputType="number"
+                android:text="1"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/colorMediumGrey" />
+
+            <EditText
+                android:id="@+id/calibrationA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="1"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/colorMediumGrey"
+                android:layout_alignBaseline="@+id/calibrationYTitle"
+                android:layout_alignBottom="@+id/calibrationYTitle"
+                android:layout_toEndOf="@+id/calibrationR2Title"
+                android:layout_marginStart="10dp" />
+
+            <EditText
+                android:id="@+id/calibrationR2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="1"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/colorMediumGrey"
+                android:layout_alignBaseline="@+id/calibrationR2Title"
+                android:layout_alignBottom="@+id/calibrationR2Title"
+                android:layout_alignStart="@+id/calibrationA" />
+
+    <Button
+        android:id="@+id/buttonSaveConfiguration"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_save_configuration"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginTop="29dp"
+        android:layout_below="@+id/calibrationR2"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
+
+</LinearLayout>

@@ -11,6 +11,7 @@ import com.application.smartbiosensor.vo.Correction;
 import com.application.smartbiosensor.vo.ItemMeasurement;
 import com.application.smartbiosensor.vo.Measurement;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -55,16 +56,19 @@ public class MeasurementDAO {
     }
 
 
-    public ArrayList<Measurement> getMeasurements() {
+    public ArrayList<Measurement> getMeasurements(Date date) {
 
         ArrayList<Measurement>  measurements = new ArrayList<Measurement>();
+
+        String whereClause = "date(" + DataBaseHelper.DATETIME_COLUMN + ") = ? ";
+        String [] whereArgs = {date.toString()};
 
         Cursor cursor = database.query(DataBaseHelper.MEASUREMENT_TABLE,
                 new String[] { DataBaseHelper.ID_COLUMN,
                         DataBaseHelper.CORRECTION_ID_COLUMN,
                         DataBaseHelper.CONFIGURATION_ID_COLUMN,
                         DataBaseHelper.DATETIME_COLUMN},
-                null, null, null, null, DataBaseHelper.DATETIME_COLUMN + " ASC");
+                whereClause, whereArgs, null, null, DataBaseHelper.DATETIME_COLUMN + " ASC");
 
         while (cursor.moveToNext()) {
             Measurement measurement = new Measurement();

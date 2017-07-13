@@ -6,8 +6,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
-    <!-- <uses-feature android:name="android.hardware.camera" android:required="true" /> -->
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
@@ -26,6 +26,21 @@
         <activity android:name=".CalibrationResult" />
         <activity android:name=".Configuration" />
         <activity android:name=".Export"></activity>
+
+        <activity
+            android:name="com.dropbox.client2.android.AuthActivity"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboard">
+            <intent-filter>
+                <!-- Change this to be db- followed by your app key -->
+                <data android:scheme="db-z4zmyphuikx78fr" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

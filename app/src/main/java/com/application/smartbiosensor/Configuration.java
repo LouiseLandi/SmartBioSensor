@@ -7,13 +7,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.application.smartbiosensor.database.CalibrationDAO;
 import com.application.smartbiosensor.database.ConfigurationDAO;
+import com.application.smartbiosensor.vo.Calibration;
 
 public class Configuration extends AppCompatActivity {
 
     private EditText numberAverageMeasure;
-    private EditText numberAverageCalibration;
     private EditText numberThreshold;
+    private EditText calibrationA;
+    private EditText calibrationB;
+    private EditText calibrationR2;
+    private com.application.smartbiosensor.vo.Configuration actualConfiguration;
     private Button saveConfigurationButton;
 
     @Override
@@ -27,18 +33,24 @@ public class Configuration extends AppCompatActivity {
 
 
         numberAverageMeasure = (EditText) findViewById(R.id.numberAverageMeasure);
-        numberAverageCalibration = (EditText) findViewById(R.id.numberAverageCalibration);
         numberThreshold = (EditText) findViewById(R.id.numberThreshold);
+
+        calibrationA = (EditText) findViewById(R.id.calibrationA);
+        calibrationB = (EditText) findViewById(R.id.calibrationB);
+        calibrationR2 = (EditText) findViewById(R.id.calibrationR2);
 
         saveConfigurationButton = (Button) findViewById(R.id.buttonSaveConfiguration);
         saveConfigurationButton.setOnClickListener(saveConfigurationListener);
 
         ConfigurationDAO configurationDAO = new ConfigurationDAO(getApplicationContext());
-        com.application.smartbiosensor.vo.Configuration configuration = configurationDAO.getActualConfiguration();
+        actualConfiguration = configurationDAO.getActualConfiguration();
 
-        numberAverageCalibration.setText(String.valueOf(configuration.getNumberAverageCalibration()));
-        numberAverageMeasure.setText(String.valueOf(configuration.getNumberAverageMeasure()));
-        numberThreshold.setText(String.valueOf(configuration.getNumberThreshold()));
+        numberAverageMeasure.setText(String.valueOf(actualConfiguration.getNumberAverageMeasure()));
+        numberThreshold.setText(String.valueOf(actualConfiguration.getNumberThreshold()));
+
+        calibrationA.setText(String.valueOf(actualConfiguration.getCalibration().getARounded()));
+        calibrationB.setText(String.valueOf(actualConfiguration.getCalibration().getBRounded()));
+        calibrationR2.setText(String.valueOf(actualConfiguration.getCalibration().getR2Rounded()));
     }
 
     protected View.OnClickListener saveConfigurationListener = new View.OnClickListener() {
@@ -47,14 +59,26 @@ public class Configuration extends AppCompatActivity {
         public void onClick(View v) {
 
 
-
-            ConfigurationDAO configurationDAO = new ConfigurationDAO(getApplicationContext());
-
             com.application.smartbiosensor.vo.Configuration configuration = new com.application.smartbiosensor.vo.Configuration();
             configuration.setNumberAverageMeasure(Integer.parseInt(numberAverageMeasure.getText().toString()));
-            configuration.setNumberAverageCalibration(Integer.parseInt(numberAverageCalibration.getText().toString()));
             configuration.setNumberThreshold(Integer.parseInt(numberThreshold.getText().toString()));
 
+            double a = Double.parseDouble(calibrationA.getText().toString());
+            double b = Double.parseDouble(calibrationB.getText().toString());
+            double r2 = Double.parseDouble(calibrationR2.getText().toString());
+            Calibration calibration = actualConfiguration.getCalibration();
+
+            if(a != actualConfiguration.getCalibration().getARounded() || b != actualConfiguration.getCalibration().getBRounded() || r2 != actualConfiguration.getCalibration().getR2Rounded())
+            {
+                CalibrationDAO calibrationDAO = new CalibrationDAO(getApplicationContext());
+                calibration = new Calibration(a, b, r2);
+                long calibrationId = calibrationDAO.addCalibration(calibration);
+                calibration.setId(calibrationId);
+            }
+
+            configuration.setCalibration(calibration);
+
+            ConfigurationDAO configurationDAO = new ConfigurationDAO(getApplicationContext());
             configurationDAO.addConfiguration(configuration);
 
         }

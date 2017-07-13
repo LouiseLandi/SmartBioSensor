@@ -10,7 +10,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     private static DataBaseHelper instance;
     private static final String DATABASE_NAME = "smartsensordb";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     public static final String CALIBRATION_TABLE = "calibration";
     public static final String CONFIGURATION_TABLE = "configuration";
@@ -23,7 +23,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     public static final String A_COLUMN = "a";
     public static final String B_COLUMN = "b";
     public static final String R2_COLUMN = "r2";
-    public static final String NUMBER_AVERAGE_CALIBRATION_COLUMN = "numberAverageCalibration";
     public static final String NUMBER_AVERAGE_MEASURE_COLUMN = "numberAverageMeasure";
     public static final String NUMBER_THRESHOLD_COLUMN = "numberThreshold";
     public static final String INTENSITY_COLUMN = "intensity";
@@ -31,43 +30,50 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     public static final String CONFIGURATION_ID_COLUMN = "configurationId";
     public static final String CORRECTION_ID_COLUMN = "correctionId";
     public static final String MEASUREMENT_ID_COLUMN = "measurementId";
+    public static final String CALIBRATION_ID_COLUMN = "calibrationId";
 
     public static final String CREATE_CALIBRATION_TABLE = "CREATE TABLE "
             + CALIBRATION_TABLE + "(" + ID_COLUMN + " INTEGER PRIMARY KEY,"
             + DATETIME_COLUMN + " DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))," + A_COLUMN + " REAL," + B_COLUMN + " REAL," + R2_COLUMN + " REAL)";
 
-    public static final String DROP_CALIBRATION_TABLE = "DROP TABLE IF EXISTS " + CALIBRATION_TABLE;
-
-
     public static final String CREATE_CONFIGURATION_TABLE = "CREATE TABLE "
             + CONFIGURATION_TABLE + "(" + ID_COLUMN + " INTEGER PRIMARY KEY,"
             + DATETIME_COLUMN + " DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))," + NUMBER_AVERAGE_MEASURE_COLUMN
-            + " INTEGER," + NUMBER_AVERAGE_CALIBRATION_COLUMN + " INTEGER," + NUMBER_THRESHOLD_COLUMN + " INTEGER)";
-
-    public static final String DROP_CONFIGURATION_TABLE = "DROP TABLE IF EXISTS " + CONFIGURATION_TABLE;
-
-    public static final String INSERT_DEFAULT_CONFIGURATION = "INSERT INTO " + CONFIGURATION_TABLE + "(" +
-            NUMBER_AVERAGE_MEASURE_COLUMN + ", " + NUMBER_AVERAGE_CALIBRATION_COLUMN + ", " + NUMBER_THRESHOLD_COLUMN + ")" +
-            " VALUES (1, 1, 235)";
+            + " INTEGER," + NUMBER_THRESHOLD_COLUMN + " INTEGER,"
+            + CALIBRATION_ID_COLUMN + " INTEGER, FOREIGN KEY(" + CALIBRATION_ID_COLUMN
+            + ") REFERENCES " + CALIBRATION_TABLE + "(" + ID_COLUMN + "))";
 
     public static final String CREATE_MEASUREMENT_TABLE = "CREATE TABLE "
             + MEASUREMENT_TABLE + "(" + ID_COLUMN + " INTEGER PRIMARY KEY,"
-            + DATETIME_COLUMN + " DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))," + CORRECTION_ID_COLUMN + " INTEGER," + CONFIGURATION_ID_COLUMN + " INTEGER)";
-
-    public static final String DROP_MEASUREMENT_TABLE = "DROP TABLE IF EXISTS " + MEASUREMENT_TABLE;
+            + DATETIME_COLUMN + " DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),"
+            + CORRECTION_ID_COLUMN + " INTEGER," + CONFIGURATION_ID_COLUMN + " INTEGER, FOREIGN KEY(" + CORRECTION_ID_COLUMN
+            + ") REFERENCES " + CORRECTION_TABLE + "(" + ID_COLUMN + "), FOREIGN KEY(" + CONFIGURATION_ID_COLUMN
+            + ") REFERENCES " + CONFIGURATION_TABLE + "(" + ID_COLUMN + "))";
 
     public static final String CREATE_CORRECTION_TABLE = "CREATE TABLE "
             + CORRECTION_TABLE + "(" + ID_COLUMN + " INTEGER PRIMARY KEY,"
             + DATETIME_COLUMN + " DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))," + INTENSITY_COLUMN
             + " REAL," + REFERENCE_INTENSITY_COLUMN + " REAL)";
 
-    public static final String DROP_CORRECTION_TABLE = "DROP TABLE IF EXISTS " + CORRECTION_TABLE;
-
     public static final String CREATE_ITEM_MEASUREMENT_TABLE = "CREATE TABLE "
             + ITEM_MEASUREMENT_TABLE + "(" + ID_COLUMN + " INTEGER PRIMARY KEY,"
             + DATETIME_COLUMN + " DATETIME DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))," + INTENSITY_COLUMN
-            + " REAL," + REFERENCE_INTENSITY_COLUMN + " REAL," + MEASUREMENT_ID_COLUMN + " INTEGER)";
+            + " REAL," + REFERENCE_INTENSITY_COLUMN + " REAL," + MEASUREMENT_ID_COLUMN + " INTEGER, FOREIGN KEY("
+            + MEASUREMENT_ID_COLUMN + ") REFERENCES " + MEASUREMENT_TABLE + "(" + ID_COLUMN + "))";
 
+
+    public static final String INSERT_DEFAULT_CONFIGURATION = "INSERT INTO " + CONFIGURATION_TABLE + "(" +
+            NUMBER_AVERAGE_MEASURE_COLUMN + ", " + NUMBER_THRESHOLD_COLUMN + ", "
+            + CALIBRATION_ID_COLUMN + ")" + " VALUES (1, 235, 1)";
+
+    public static final String INSERT_DEFAULT_CALIBRATION = "INSERT INTO " + CALIBRATION_TABLE + "(" +
+            A_COLUMN + ", " + B_COLUMN + ", " + R2_COLUMN + ")" + " VALUES (-4.628, 7.1702, 0.9932)";
+
+
+    public static final String DROP_CALIBRATION_TABLE = "DROP TABLE IF EXISTS " + CALIBRATION_TABLE;
+    public static final String DROP_CONFIGURATION_TABLE = "DROP TABLE IF EXISTS " + CONFIGURATION_TABLE;
+    public static final String DROP_MEASUREMENT_TABLE = "DROP TABLE IF EXISTS " + MEASUREMENT_TABLE;
+    public static final String DROP_CORRECTION_TABLE = "DROP TABLE IF EXISTS " + CORRECTION_TABLE;
     public static final String DROP_ITEM_MEASUREMENT_TABLE = "DROP TABLE IF EXISTS " + ITEM_MEASUREMENT_TABLE;
 
 
@@ -98,6 +104,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         db.execSQL(CREATE_CORRECTION_TABLE);
         db.execSQL(CREATE_ITEM_MEASUREMENT_TABLE);
         db.execSQL(CREATE_MEASUREMENT_TABLE);
+        db.execSQL(INSERT_DEFAULT_CALIBRATION);
         db.execSQL(INSERT_DEFAULT_CONFIGURATION);
 
     }

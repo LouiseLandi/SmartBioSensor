@@ -6,8 +6,8 @@ public class Configuration {
 
     private long id;
     private int numberAverageMeasure;
-    private int numberAverageCalibration;
     private int numberThreshold;
+    private Calibration calibration;
     private Timestamp datetime;
 
     public long getId() {
@@ -26,14 +26,6 @@ public class Configuration {
         this.numberAverageMeasure = numberAverageMeasure;
     }
 
-    public int getNumberAverageCalibration() {
-        return numberAverageCalibration;
-    }
-
-    public void setNumberAverageCalibration(int numberAverageCalibration) {
-        this.numberAverageCalibration = numberAverageCalibration;
-    }
-
     public Timestamp getDatetime() {
         return datetime;
     }
@@ -48,5 +40,13 @@ public class Configuration {
 
     public void setNumberThreshold(int threshold) {
         this.numberThreshold = threshold;
+    }
+
+    public Calibration getCalibration() {
+        return calibration;
+    }
+
+    public void setCalibration(Calibration calibration) {
+        this.calibration = calibration;
     }
 }

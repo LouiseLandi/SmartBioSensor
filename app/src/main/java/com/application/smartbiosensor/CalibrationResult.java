@@ -91,8 +91,7 @@ public class CalibrationResult extends AppCompatActivity {
 
             CalibrationDAO calibrationDAO = new CalibrationDAO(getApplicationContext());
 
-            Calibration calibration = new Calibration();
-            calibration.setLinearRegressionResult(linearRegressionResult);
+            Calibration calibration = new Calibration(linearRegressionResult.getA(), linearRegressionResult.getB(), linearRegressionResult.getR2());
 
             calibrationDAO.addCalibration(calibration);
 

@@ -86,4 +86,7 @@ public class Measurement {
         return this.averageReferenceIntensity;
     }
 
+    public double getAverageFactor(){
+        return getAverageIntensity()/getAverageReferenceIntensity();
+    }
 }
