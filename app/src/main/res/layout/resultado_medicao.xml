@@ -25,6 +25,17 @@
             android:layout_alignStart="@+id/measureFactorTextViewTitle" />
 
         <TextView
+            android:id="@+id/measureRefractiveIndexTextViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/refractive_index_textview_title"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/list_body_calibragem"
+            android:layout_marginTop="24dp"
+            android:layout_below="@+id/measureCorrectedFactorTextViewTitle"
+            android:layout_alignStart="@+id/measureCorrectedFactorTextViewTitle" />
+
+        <TextView
             android:id="@+id/measureIntensityTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,6 +88,17 @@
             android:textSize="@dimen/list_body_calibragem"
             android:layout_below="@+id/measureFactorTextView"
             android:layout_alignStart="@+id/measureFactorTextView" />
+
+        <TextView
+            android:id="@+id/measureRefractiveIndexTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/list_body_calibragem"
+            android:layout_alignBaseline="@+id/measureRefractiveIndexTextViewTitle"
+            android:layout_alignBottom="@+id/measureRefractiveIndexTextViewTitle"
+            android:layout_alignStart="@+id/correctedFactorTextView" />
 
         <TextView
             android:id="@+id/measureFactorTextViewTitle"

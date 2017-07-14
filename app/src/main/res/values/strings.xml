@@ -44,7 +44,7 @@
     <string name="calibration_x">X    + </string>
     <string name="calibration_r2">R²  = </string>
     <string name="export_dropbox_title">Dropbox</string>
-
+    <string name="refractive_index_textview_title">Índice de Refraçao:</string>
 
 </resources>
 

@@ -18,6 +18,8 @@ import com.application.smartbiosensor.database.CorrectionDAO;
 import com.application.smartbiosensor.database.ItemMeasurementDAO;
 import com.application.smartbiosensor.database.MeasurementDAO;
 import com.application.smartbiosensor.vo.*;
+import com.application.smartbiosensor.vo.Configuration;
+
 import java.util.ArrayList;
 
 public class MeasureFragment extends Fragment {
@@ -34,6 +36,7 @@ public class MeasureFragment extends Fragment {
     private TextView correctionFactor;
     private TextView correctionIntensity;
     private TextView correctionIntensityReference;
+    private TextView measureRefractiveIndex;
     private ProgressBar progressBarMeasure;
     private ProgressBar progressBarCorrection;
     private CardView resultMeasure;
@@ -65,6 +68,8 @@ public class MeasureFragment extends Fragment {
         correctionFactor = (TextView) view.findViewById(R.id.correctionFactorTextView);
 
         measureCorrectedFactor = (TextView) view.findViewById(R.id.correctedFactorTextView);
+
+        measureRefractiveIndex = (TextView) view.findViewById(R.id.measureRefractiveIndexTextView);
 
         textureView = (TextureView) view.findViewById(R.id.textureView);
 
@@ -241,6 +246,7 @@ public class MeasureFragment extends Fragment {
                 measureIntensity.setText(String.valueOf(processResult.getIntensityRounded()));
                 measureIntensityReference.setText(String.valueOf(processResult.getIntensityReferenceRounded()));
                 measureFactor.setText(String.valueOf(processResult.getIntensityFactorRounded()));
+                measureCorrectedFactor.setText(String.valueOf(averageCorrectedFactor));
 
                 resultMeasure.setVisibility(View.VISIBLE);
                 measureButton.setVisibility(View.VISIBLE);
@@ -255,15 +261,13 @@ public class MeasureFragment extends Fragment {
                 });
 
                 //TRATAR CASO NÃO TENHA NENHUMA CALIBRAÇÃO AINDA
-                /*CalibrationDAO calibrationDAO = new CalibrationDAO(getContext());
-                Calibration calibration = calibrationDAO.getActualCalibration();
+                ConfigurationDAO configurationDAO = new ConfigurationDAO(getContext());
+                Configuration configuracao = configurationDAO.getActualConfiguration();
 
-                double factorMeasureCorrected = processMeasureResult.getIntensityFactor()/processReferenceResult.getIntensityFactor();
-
-                double refractiveIndex = calibration.getLinearRegressionResult().getXGivenYRounded(factorMeasureCorrected);
-                refractiveIndexTextView.setText(String.valueOf(refractiveIndex));*/
-
-                measureCorrectedFactor.setText(String.valueOf(averageCorrectedFactor));
+                if(configuracao.getCalibration() != null){
+                    double refractiveIndex = configuracao.getCalibration().getXGivenYRounded(averageCorrectedFactor);
+                    measureRefractiveIndex.setText(String.valueOf(refractiveIndex));
+                }
 
             }
         });

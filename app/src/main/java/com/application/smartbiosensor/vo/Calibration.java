@@ -1,10 +1,6 @@
 package com.application.smartbiosensor.vo;
 
-
-import com.application.smartbiosensor.LinearRegression;
-import com.application.smartbiosensor.LinearRegressionResult;
 import com.application.smartbiosensor.Util;
-
 import java.sql.Timestamp;
 
 public class Calibration {
