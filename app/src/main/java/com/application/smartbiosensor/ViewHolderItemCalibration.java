@@ -3,7 +3,6 @@ package com.application.smartbiosensor;
 import android.app.Activity;
 import android.content.Context;
 import android.media.ImageReader;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.application.smartbiosensor.service.CameraService;
+import com.application.smartbiosensor.service.ImageProcessingService;
 
 import java.util.ArrayList;
 

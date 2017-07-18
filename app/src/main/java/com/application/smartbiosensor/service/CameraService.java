@@ -1,4 +1,4 @@
-package com.application.smartbiosensor;
+package com.application.smartbiosensor.service;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,16 +18,13 @@ import android.media.ImageReader;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -105,7 +102,7 @@ public class CameraService {
         this.textureView = textureView;
     }
 
-    protected void takePicture() {
+    public void takePicture() {
 
         if(textureView != null) {
             lockFocus();
@@ -114,7 +111,7 @@ public class CameraService {
         }
     }
 
-    protected void openCamera() {
+    public void openCamera() {
 
         try {
 
@@ -133,7 +130,7 @@ public class CameraService {
         }
     }
 
-    protected void closeCamera() {
+    public void closeCamera() {
         try {
             cameraOpenCloseLock.acquire();
             if (cameraCaptureSession != null) {
@@ -341,13 +338,13 @@ public class CameraService {
         }
     }
 
-    protected void startBackgroundThread() {
+    public void startBackgroundThread() {
         backgroundThread = new HandlerThread("Camera Background");
         backgroundThread.start();
         backgroundHandler = new Handler(backgroundThread.getLooper());
     }
 
-    protected void stopBackgroundThread() {
+    public void stopBackgroundThread() {
         backgroundThread.quitSafely();
         try {
             backgroundThread.join();
@@ -432,8 +429,9 @@ public class CameraService {
                                 // Auto focus should be continuous for camera preview.
                                 previewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                                 //previewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_MODE_AUTO);
+                                //previewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_OFF);
                                 //previewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
-                                //previewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, (long)0.001);
+                               //previewRequestBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, (long)1000000000);
                                 //previewRequestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, 200);
 
                                 previewRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);

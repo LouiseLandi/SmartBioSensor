@@ -1,6 +1,7 @@
 package com.application.smartbiosensor.vo;
 
-import com.application.smartbiosensor.Util;
+import com.application.smartbiosensor.util.Util;
+
 import java.sql.Timestamp;
 
 public class Calibration {

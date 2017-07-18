@@ -1,7 +1,5 @@
 package com.application.smartbiosensor.vo;
 
-import com.application.smartbiosensor.MeasureFragment;
-
 import java.sql.Timestamp;
 
 public class ItemMeasurement {

@@ -1,5 +1,7 @@
 package com.application.smartbiosensor;
 
+import com.application.smartbiosensor.util.Util;
+
 public class ProcessResultFactor {
 
     private double factor;

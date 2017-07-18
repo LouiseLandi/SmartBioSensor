@@ -1,10 +1,10 @@
-package com.application.smartbiosensor;
+package com.application.smartbiosensor.activity;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.application.smartbiosensor.R;
 import com.application.smartbiosensor.database.MeasurementDAO;
-import com.application.smartbiosensor.vo.*;
+import com.application.smartbiosensor.util.Util;
+import com.application.smartbiosensor.vo.Configuration;
+import com.application.smartbiosensor.vo.Correction;
+import com.application.smartbiosensor.vo.ItemMeasurement;
+import com.application.smartbiosensor.vo.Measurement;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
@@ -27,7 +32,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Export extends AppCompatActivity {
+public class ExportActivity extends AppCompatActivity {
 
     final static private String APP_KEY = "z4zmyphuikx78fr";
     final static private String APP_SECRET = "jiybgvj6djjugqe";
@@ -41,7 +46,7 @@ public class Export extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.export);
+        setContentView(R.layout.export_activity);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbarExport));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -110,7 +115,7 @@ public class Export extends AppCompatActivity {
 
                     for (int m = 0; m < measurements.size(); m++) {
                         Measurement measurement = measurements.get(m);
-                        com.application.smartbiosensor.vo.Configuration configuration = measurement.getConfiguration();
+                        Configuration configuration = measurement.getConfiguration();
                         Correction correction = measurement.getCorrection();
 
                         String correctionLine = String.valueOf(correction.getId()) + separator +
@@ -165,7 +170,7 @@ public class Export extends AppCompatActivity {
                     String accessToken = settings.getString("dropboxToken", "");
 
                     if (accessToken == null || accessToken == "") {
-                        DBApi.getSession().startOAuth2Authentication(Export.this);
+                        DBApi.getSession().startOAuth2Authentication(ExportActivity.this);
                     } else {
                         DBApi.getSession().setOAuth2AccessToken(accessToken);
                     }

@@ -9,8 +9,10 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import com.androidplot.xy.XYPlot;
+
+import com.application.smartbiosensor.service.CameraService;
+import com.application.smartbiosensor.service.ImageProcessingService;
+
 import java.util.ArrayList;
 
 public class CalibrationFragment extends Fragment {

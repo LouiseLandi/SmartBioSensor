@@ -1,6 +1,8 @@
 package com.application.smartbiosensor;
 
 
+import com.application.smartbiosensor.util.Util;
+
 public class ProcessResult {
 
     private double intensity;

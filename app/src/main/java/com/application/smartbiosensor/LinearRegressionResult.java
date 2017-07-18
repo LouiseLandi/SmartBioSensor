@@ -1,5 +1,7 @@
 package com.application.smartbiosensor;
 
+import com.application.smartbiosensor.util.Util;
+
 import java.io.Serializable;
 
 public class LinearRegressionResult implements Serializable{

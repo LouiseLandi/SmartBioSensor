@@ -1,11 +1,15 @@
-package com.application.smartbiosensor;
+package com.application.smartbiosensor.service;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.media.ImageReader;
 import android.util.Pair;
+
+import com.application.smartbiosensor.ProcessResult;
+import com.application.smartbiosensor.util.Util;
 import com.application.smartbiosensor.vo.Configuration;
+
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -17,6 +21,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -34,7 +39,7 @@ public class ImageProcessingService {
     private ProcessResult processResult;
     private boolean SAVE_IMAGES_TO_FILES = false;
     private boolean OPTION_AVERAGE_INTENSITY_PER_PIXEL = true;
-    private com.application.smartbiosensor.vo.Configuration configuration;
+    private Configuration configuration;
 
     public ImageProcessingService(){
     }
@@ -180,7 +185,7 @@ public class ImageProcessingService {
 
     }
 
-    protected ProcessResult processImage(ImageReader reader){
+    public ProcessResult processImage(ImageReader reader){
 
         processResult = new ProcessResult();
 
@@ -194,7 +199,7 @@ public class ImageProcessingService {
             buffer.get(bytes);
 
             Mat imgToProcess;
-            
+
             if(SAVE_IMAGES_TO_FILES) {
 
                 File file = Util.saveBytesToFile(bytes, "pic" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);

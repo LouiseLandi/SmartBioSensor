@@ -1,29 +1,45 @@
-package com.application.smartbiosensor;
+package com.application.smartbiosensor.activity;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.media.ImageReader;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.application.smartbiosensor.ProcessResult;
+import com.application.smartbiosensor.R;
 import com.application.smartbiosensor.database.ConfigurationDAO;
 import com.application.smartbiosensor.database.CorrectionDAO;
 import com.application.smartbiosensor.database.ItemMeasurementDAO;
 import com.application.smartbiosensor.database.MeasurementDAO;
-import com.application.smartbiosensor.vo.*;
+import com.application.smartbiosensor.service.CameraService;
+import com.application.smartbiosensor.service.ImageProcessingService;
 import com.application.smartbiosensor.vo.Configuration;
+import com.application.smartbiosensor.vo.Correction;
+import com.application.smartbiosensor.vo.ItemMeasurement;
+import com.application.smartbiosensor.vo.Measurement;
 
 import java.util.ArrayList;
 
-public class MeasureFragment extends Fragment {
+public class PrincipalActivity extends AppCompatActivity {
 
+    private static int REQUEST_CAMERA_CODE = 50;
+    private static int REQUEST_EXTERNAL_STORAGE_CODE = 1;
+    private Toolbar toolbar;
     private CameraService cameraService;
     private ImageProcessingService imageProcessingService;
     private TextureView textureView;
@@ -42,51 +58,71 @@ public class MeasureFragment extends Fragment {
     private CardView resultMeasure;
     private CardView resultCalibration;
     private int processRequest;
-    private com.application.smartbiosensor.vo.Configuration configuration;
+    private Configuration configuration;
     private Measurement measurement;
     private ArrayList<ItemMeasurement> itemsMeasurements;
 
     private static final int STATE_CORRECTION = 0;
     private static final int STATE_MEASURE = 1;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tab_medicao, container, false);
 
-        measureButton = (Button) view.findViewById(R.id.measureButton);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.principal_activity);
+
+        toolbar = (Toolbar) findViewById(R.id.barra_ferramentas);
+        setSupportActionBar(toolbar);
+
+        if (!hasFlash() || !hasCamera()) {
+
+            AlertDialog alert = new AlertDialog.Builder(PrincipalActivity.this).create();
+            alert.setTitle("Erro");
+            alert.setMessage("Seu dispositivo não possui Flash/Camera.");
+                /*alert.setButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });*/
+            alert.show();
+            return;
+        }
+
+        checkStoragePermissions();
+        checkCameraPermissions();
+
+        measureButton = (Button) findViewById(R.id.measureButton);
         measureButton.setOnClickListener(measureListener);
 
-        correctionButton = (Button) view.findViewById(R.id.correctionButton);
-        correctionButton.setOnClickListener(referenceListener);
+        correctionButton = (Button) findViewById(R.id.correctionButton);
+        correctionButton.setOnClickListener(correctionListener);
 
-        measureIntensity = (TextView) view.findViewById(R.id.measureIntensityTextView);
-        measureIntensityReference = (TextView) view.findViewById(R.id.measureIntensityReferenceTextView);
-        measureFactor = (TextView) view.findViewById(R.id.measureFactorTextView);
+        measureIntensity = (TextView) findViewById(R.id.measureIntensityTextView);
+        measureIntensityReference = (TextView) findViewById(R.id.measureIntensityReferenceTextView);
+        measureFactor = (TextView) findViewById(R.id.measureFactorTextView);
+        measureCorrectedFactor = (TextView) findViewById(R.id.correctedFactorTextView);
+        measureRefractiveIndex = (TextView) findViewById(R.id.measureRefractiveIndexTextView);
 
-        correctionIntensity = (TextView) view.findViewById(R.id.correctionIntensityTextView);
-        correctionIntensityReference = (TextView) view.findViewById(R.id.correctionIntensityReferenceTextView);
-        correctionFactor = (TextView) view.findViewById(R.id.correctionFactorTextView);
+        correctionIntensity = (TextView) findViewById(R.id.correctionIntensityTextView);
+        correctionIntensityReference = (TextView) findViewById(R.id.correctionIntensityReferenceTextView);
+        correctionFactor = (TextView) findViewById(R.id.correctionFactorTextView);
 
-        measureCorrectedFactor = (TextView) view.findViewById(R.id.correctedFactorTextView);
+        textureView = (TextureView) findViewById(R.id.textureView);
 
-        measureRefractiveIndex = (TextView) view.findViewById(R.id.measureRefractiveIndexTextView);
+        progressBarMeasure = (ProgressBar) findViewById(R.id.progressBarMeasure);
+        progressBarCorrection = (ProgressBar) findViewById(R.id.progressBarCorrection);
 
-        textureView = (TextureView) view.findViewById(R.id.textureView);
+        resultMeasure = (CardView) findViewById(R.id.resultado_medicao);
+        resultCalibration = (CardView) findViewById(R.id.resultado_correcao);
 
-        progressBarMeasure = (ProgressBar) view.findViewById(R.id.progressBarMeasure);
-        progressBarCorrection = (ProgressBar) view.findViewById(R.id.progressBarCorrection);
-
-        resultMeasure = (CardView) view.findViewById(R.id.resultado_medicao);
-        resultCalibration = (CardView) view.findViewById(R.id.resultado_correcao);
-
-        cameraService = new CameraService(getActivity(), textureView);
+        cameraService = new CameraService(this, textureView);
         cameraService.setOnImageAvailableListener(onImageAvailableListener);
 
         imageProcessingService = new ImageProcessingService();
 
-        return view;
-    }
 
+    }
 
     @Override
     public void onResume(){
@@ -99,7 +135,7 @@ public class MeasureFragment extends Fragment {
             textureView.setSurfaceTextureListener(surfaceTextureListener);
         }
 
-        ConfigurationDAO configurationDAO = new ConfigurationDAO(getContext());
+        ConfigurationDAO configurationDAO = new ConfigurationDAO(getApplicationContext());
         configuration =  configurationDAO.getActualConfiguration();
     }
 
@@ -110,7 +146,6 @@ public class MeasureFragment extends Fragment {
         super.onPause();
     }
 
-
     protected View.OnClickListener measureListener = new View.OnClickListener() {
 
         @Override
@@ -120,14 +155,14 @@ public class MeasureFragment extends Fragment {
             measureButton.setVisibility(View.GONE);
             processRequest = STATE_MEASURE;
 
-            CorrectionDAO correctionDAO = new CorrectionDAO(getContext());
+            CorrectionDAO correctionDAO = new CorrectionDAO(getApplicationContext());
             Correction correction = correctionDAO.getActualCorrection();
 
             measurement = new Measurement();
             measurement.setConfiguration(configuration);
             measurement.setCorrection(correction);
 
-            MeasurementDAO measurementDAO = new MeasurementDAO(getContext());
+            MeasurementDAO measurementDAO = new MeasurementDAO(getApplicationContext());
             long idMeasurement = measurementDAO.addMeasurement(measurement);
             measurement.setId(idMeasurement);
             itemsMeasurements =  new ArrayList<ItemMeasurement>();
@@ -137,7 +172,7 @@ public class MeasureFragment extends Fragment {
         }
     };
 
-    protected View.OnClickListener referenceListener = new View.OnClickListener() {
+    protected View.OnClickListener correctionListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -190,7 +225,7 @@ public class MeasureFragment extends Fragment {
                         correction.setIntensity(processResult.getIntensity());
                         correction.setReferenceIntensity(processResult.getIntensityReference());
 
-                        CorrectionDAO correctionDAO = new CorrectionDAO(getContext());
+                        CorrectionDAO correctionDAO = new CorrectionDAO(getApplicationContext());
                         correctionDAO.addCorrection(correction);
 
                         showCorrectionResults(processResult);
@@ -203,7 +238,7 @@ public class MeasureFragment extends Fragment {
                         itemMeasurement.setReferenceIntensity(processResult.getIntensityReference());
                         itemMeasurement.setMeasurement(measurement);
 
-                        ItemMeasurementDAO itemMeasurementDAO = new ItemMeasurementDAO(getContext());
+                        ItemMeasurementDAO itemMeasurementDAO = new ItemMeasurementDAO(getApplicationContext());
                         itemMeasurementDAO.addItemMeasurement(itemMeasurement);
 
                         itemsMeasurements.add(itemMeasurement);
@@ -240,7 +275,7 @@ public class MeasureFragment extends Fragment {
         processResult.setIntensity(measurement.getAverageIntensity());
         processResult.setIntensityReference(measurement.getAverageReferenceIntensity());
 
-        getActivity().runOnUiThread(new Runnable() {
+        this.runOnUiThread(new Runnable() {
             public void run() {
 
                 measureIntensity.setText(String.valueOf(processResult.getIntensityRounded()));
@@ -252,7 +287,7 @@ public class MeasureFragment extends Fragment {
                 measureButton.setVisibility(View.VISIBLE);
                 progressBarMeasure.setVisibility(View.GONE);
 
-                final ScrollView scrollview = ((ScrollView) getView().findViewById(R.id.scrollView));
+                final ScrollView scrollview = ((ScrollView) findViewById(R.id.scrollView));
                 scrollview.post(new Runnable() {
                     @Override
                     public void run() {
@@ -260,8 +295,7 @@ public class MeasureFragment extends Fragment {
                     }
                 });
 
-                //TRATAR CASO NÃO TENHA NENHUMA CALIBRAÇÃO AINDA
-                ConfigurationDAO configurationDAO = new ConfigurationDAO(getContext());
+                ConfigurationDAO configurationDAO = new ConfigurationDAO(getApplicationContext());
                 Configuration configuracao = configurationDAO.getActualConfiguration();
 
                 if(configuracao.getCalibration() != null){
@@ -277,7 +311,7 @@ public class MeasureFragment extends Fragment {
     private void showCorrectionResults(final ProcessResult processResult){
 
 
-        getActivity().runOnUiThread(new Runnable() {
+        this.runOnUiThread(new Runnable() {
             public void run() {
 
                 correctionIntensity.setText(String.valueOf(processResult.getIntensityRounded()));
@@ -289,7 +323,7 @@ public class MeasureFragment extends Fragment {
                 correctionButton.setVisibility(View.VISIBLE);
                 progressBarCorrection.setVisibility(View.GONE);
 
-                final ScrollView scrollview = ((ScrollView) getView().findViewById(R.id.scrollView));
+                final ScrollView scrollview = ((ScrollView) findViewById(R.id.scrollView));
                 scrollview.post(new Runnable() {
                     @Override
                     public void run() {
@@ -307,16 +341,105 @@ public class MeasureFragment extends Fragment {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                    for(int measurementItemCount = 0; measurementItemCount < configuration.getNumberAverageMeasure(); measurementItemCount++) {
-                        cameraService.takePicture();
-                    }
+                for(int measurementItemCount = 0; measurementItemCount < configuration.getNumberAverageMeasure(); measurementItemCount++) {
+                    cameraService.takePicture();
+                }
             }
 
         };
         new Thread(runnable).start();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_principal, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int
+                id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+
+            Intent intent = new Intent(this, ConfigurationActivity.class);
+            startActivity(intent);
+
+            return true;
+        }else if(id == R.id.action_export){
+
+            Intent intent = new Intent(this, ExportActivity.class);
+            startActivity(intent);
+
+            return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void checkStoragePermissions() {
+        // Check if we have write permission
+        int permissionWrite = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permissionRead = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if (permissionWrite != PackageManager.PERMISSION_GRANTED || permissionRead != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_EXTERNAL_STORAGE_CODE
+            );
+        }
+    }
+
+    private void checkCameraPermissions() {
+
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA_CODE
+            );
+        }
+
+    }
+
+    private boolean hasFlash(){
+        return getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
+
+    private boolean hasCamera(){
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 50: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+        }
+    }
 
 }
-

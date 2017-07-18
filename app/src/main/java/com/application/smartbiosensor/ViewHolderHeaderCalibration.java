@@ -13,7 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.application.smartbiosensor.service.CameraService;
+import com.application.smartbiosensor.service.ImageProcessingService;
 
 class ViewHolderHeaderCalibration extends RecyclerView.ViewHolder {
 

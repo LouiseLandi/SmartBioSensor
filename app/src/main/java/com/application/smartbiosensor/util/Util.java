@@ -1,4 +1,4 @@
-package com.application.smartbiosensor;
+package com.application.smartbiosensor.util;
 
 import android.graphics.Bitmap;
 
@@ -74,7 +74,7 @@ public class Util {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         cal.add(Calendar.DATE, days); //minus number would decrement the days
-        return new java.sql.Date(cal.getTimeInMillis());
+        return new Date(cal.getTimeInMillis());
     }
 
 }
