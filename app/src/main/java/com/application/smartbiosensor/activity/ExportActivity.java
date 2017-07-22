@@ -72,6 +72,15 @@ public class ExportActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
+            SharedPreferences settings = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+            String accessToken = settings.getString("dropboxToken", "");
+
+            if (accessToken == null || accessToken == "") {
+                DBApi.getSession().startOAuth2Authentication(ExportActivity.this);
+            } else {
+                DBApi.getSession().setOAuth2AccessToken(accessToken);
+            }
+
             String[] initialDateDayMonthYear = initialDate.getText().toString().split("/");
 
             Date initialDate = Date.valueOf(initialDateDayMonthYear[2] + "-" + initialDateDayMonthYear[1] + "-" + initialDateDayMonthYear[0]);
@@ -166,20 +175,14 @@ public class ExportActivity extends AppCompatActivity {
                     myOutWriter.close();
                     fOut.close();
 
-                    SharedPreferences settings = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-                    String accessToken = settings.getString("dropboxToken", "");
-
-                    if (accessToken == null || accessToken == "") {
-                        DBApi.getSession().startOAuth2Authentication(ExportActivity.this);
-                    } else {
-                        DBApi.getSession().setOAuth2AccessToken(accessToken);
-                    }
-
                     if (DBApi.getSession().isLinked()) {
                         (new UploadFile()).execute(filename);
                     }
 
                 }
+
+                Toast.makeText(getApplicationContext(), R.string.message_ok_exporting_data, Toast.LENGTH_SHORT).show();
+
             } catch (Exception e) {
                 Toast.makeText(getBaseContext(), e.getMessage() , Toast.LENGTH_SHORT).show();
             }
@@ -214,14 +217,13 @@ public class ExportActivity extends AppCompatActivity {
                 editor.putString("dropboxToken", accessToken);
                 editor.commit();
 
+                exportButton.performClick();
+
             } catch (Exception e) {
                 Toast.makeText(getBaseContext(), e.getMessage() , Toast.LENGTH_SHORT).show();
             }
         }
 
-        if (DBApi.getSession().isLinked()){
-            (new UploadFile()).execute();
-        }
 
     }
 

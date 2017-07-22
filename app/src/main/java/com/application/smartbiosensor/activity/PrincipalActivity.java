@@ -1,6 +1,9 @@
 package com.application.smartbiosensor.activity;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
@@ -19,6 +22,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.application.smartbiosensor.ProcessResult;
 import com.application.smartbiosensor.R;
@@ -26,8 +30,11 @@ import com.application.smartbiosensor.database.ConfigurationDAO;
 import com.application.smartbiosensor.database.CorrectionDAO;
 import com.application.smartbiosensor.database.ItemMeasurementDAO;
 import com.application.smartbiosensor.database.MeasurementDAO;
+import com.application.smartbiosensor.exception.CameraException;
+import com.application.smartbiosensor.exception.ImageProcessingException;
 import com.application.smartbiosensor.service.CameraService;
 import com.application.smartbiosensor.service.ImageProcessingService;
+import com.application.smartbiosensor.util.Util;
 import com.application.smartbiosensor.vo.Configuration;
 import com.application.smartbiosensor.vo.Correction;
 import com.application.smartbiosensor.vo.ItemMeasurement;
@@ -37,8 +44,8 @@ import java.util.ArrayList;
 
 public class PrincipalActivity extends AppCompatActivity {
 
-    private static int REQUEST_CAMERA_CODE = 50;
-    private static int REQUEST_EXTERNAL_STORAGE_CODE = 1;
+    private static final int REQUEST_CAMERA_CODE = 50;
+    private static final int REQUEST_EXTERNAL_STORAGE_CODE = 1;
     private Toolbar toolbar;
     private CameraService cameraService;
     private ImageProcessingService imageProcessingService;
@@ -77,20 +84,17 @@ public class PrincipalActivity extends AppCompatActivity {
         if (!hasFlash() || !hasCamera()) {
 
             AlertDialog alert = new AlertDialog.Builder(PrincipalActivity.this).create();
-            alert.setTitle("Erro");
+            alert.setTitle(R.string.message_error);
             alert.setMessage("Seu dispositivo não possui Flash/Camera.");
-                /*alert.setButton("OK", new DialogInterface.OnClickListener() {
+                alert.setButton(AlertDialog.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
-                });*/
+                });
             alert.show();
             return;
         }
-
-        checkStoragePermissions();
-        checkCameraPermissions();
 
         measureButton = (Button) findViewById(R.id.measureButton);
         measureButton.setOnClickListener(measureListener);
@@ -127,23 +131,47 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        cameraService.startBackgroundThread();
 
-        if (textureView.isAvailable()) {
-            cameraService.openCamera();
-        } else {
-            textureView.setSurfaceTextureListener(surfaceTextureListener);
+        try {
+
+            checkStoragePermissions();
+
+            if (checkCameraPermissions()) {
+                cameraService.startBackgroundThread();
+
+                if (textureView.isAvailable()) {
+                    cameraService.openCamera();
+                } else {
+                    textureView.setSurfaceTextureListener(surfaceTextureListener);
+                }
+            }
+
+            ConfigurationDAO configurationDAO = new ConfigurationDAO(getApplicationContext());
+            configuration = configurationDAO.getActualConfiguration();
+
+        } catch(CameraException e){
+            Toast.makeText(getApplicationContext(), e.getDescription(), Toast.LENGTH_SHORT).show();
+        } catch(Exception e){
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-        ConfigurationDAO configurationDAO = new ConfigurationDAO(getApplicationContext());
-        configuration =  configurationDAO.getActualConfiguration();
     }
 
     @Override
     public void onPause() {
-        cameraService.closeCamera();
-        cameraService.stopBackgroundThread();
         super.onPause();
+
+        try {
+
+            if (cameraService.isCameraOpened()) {
+                cameraService.closeCamera();
+                cameraService.stopBackgroundThread();
+            }
+
+        } catch(CameraException e){
+            Toast.makeText(getApplicationContext(), e.getDescription(), Toast.LENGTH_SHORT).show();
+        } catch(Exception e){
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     protected View.OnClickListener measureListener = new View.OnClickListener() {
@@ -190,7 +218,14 @@ public class PrincipalActivity extends AppCompatActivity {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
 
-            cameraService.openCamera();
+            try{
+                cameraService.openCamera();
+
+            } catch(CameraException e){
+                Toast.makeText(getApplicationContext(), e.getDescription(), Toast.LENGTH_SHORT).show();
+            } catch(Exception e){
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
 
         }
 
@@ -253,8 +288,13 @@ public class PrincipalActivity extends AppCompatActivity {
                     }
                 }
 
+            } catch (ImageProcessingException e){
+                updateControlsVisibility(false);
+                Toast.makeText(getApplicationContext(), e.getDescription(), Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
+                updateControlsVisibility(false);
                 e.printStackTrace();
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -281,11 +321,9 @@ public class PrincipalActivity extends AppCompatActivity {
                 measureIntensity.setText(String.valueOf(processResult.getIntensityRounded()));
                 measureIntensityReference.setText(String.valueOf(processResult.getIntensityReferenceRounded()));
                 measureFactor.setText(String.valueOf(processResult.getIntensityFactorRounded()));
-                measureCorrectedFactor.setText(String.valueOf(averageCorrectedFactor));
+                measureCorrectedFactor.setText(String.valueOf(Util.roundDoubleDecimalCases(averageCorrectedFactor, 4)));
 
-                resultMeasure.setVisibility(View.VISIBLE);
-                measureButton.setVisibility(View.VISIBLE);
-                progressBarMeasure.setVisibility(View.GONE);
+                updateControlsVisibility(true);
 
                 final ScrollView scrollview = ((ScrollView) findViewById(R.id.scrollView));
                 scrollview.post(new Runnable() {
@@ -318,10 +356,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 correctionIntensityReference.setText(String.valueOf(processResult.getIntensityReferenceRounded()));
                 correctionFactor.setText(String.valueOf(processResult.getIntensityFactorRounded()));
 
-                resultCalibration.setVisibility(View.VISIBLE);
-                measureButton.setVisibility(View.VISIBLE);
-                correctionButton.setVisibility(View.VISIBLE);
-                progressBarCorrection.setVisibility(View.GONE);
+                updateControlsVisibility(true);
 
                 final ScrollView scrollview = ((ScrollView) findViewById(R.id.scrollView));
                 scrollview.post(new Runnable() {
@@ -384,7 +419,7 @@ public class PrincipalActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkStoragePermissions() {
+    public boolean checkStoragePermissions() {
         // Check if we have write permission
         int permissionWrite = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int permissionRead = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -396,10 +431,13 @@ public class PrincipalActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_EXTERNAL_STORAGE_CODE
             );
+            return false;
+        }else{
+            return true;
         }
     }
 
-    private void checkCameraPermissions() {
+    private boolean checkCameraPermissions() {
 
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
 
@@ -409,6 +447,9 @@ public class PrincipalActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA_CODE
             );
+            return false;
+        }else{
+            return true;
         }
 
     }
@@ -424,22 +465,62 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 50: {
+            case REQUEST_CAMERA_CODE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED){
+                    finish();
                 }
+
+                return;
+            }
+            case REQUEST_EXTERNAL_STORAGE_CODE: {
+
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED){
+                    finish();
+                }
+
                 return;
             }
 
         }
+    }
+
+    private void updateControlsVisibility(final boolean success){
+
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+
+
+                switch (processRequest) {
+                    case STATE_CORRECTION: {
+
+                        if(success) {
+                            resultCalibration.setVisibility(View.VISIBLE);
+                        }
+
+                        measureButton.setVisibility(View.VISIBLE);
+                        correctionButton.setVisibility(View.VISIBLE);
+                        progressBarCorrection.setVisibility(View.GONE);
+
+                        break;
+                    }
+                    case STATE_MEASURE: {
+
+                        if(success) {
+                            resultMeasure.setVisibility(View.VISIBLE);
+                        }
+
+                        measureButton.setVisibility(View.VISIBLE);
+                        progressBarMeasure.setVisibility(View.GONE);
+
+                        break;
+                    }
+                }
+
+            }
+        });
+
+
     }
 
 }

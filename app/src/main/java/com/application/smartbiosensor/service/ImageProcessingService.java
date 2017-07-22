@@ -2,11 +2,14 @@ package com.application.smartbiosensor.service;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.media.Image;
 import android.media.ImageReader;
+import android.util.DisplayMetrics;
 import android.util.Pair;
 
 import com.application.smartbiosensor.ProcessResult;
+import com.application.smartbiosensor.exception.ImageProcessingException;
 import com.application.smartbiosensor.util.Util;
 import com.application.smartbiosensor.vo.Configuration;
 
@@ -83,29 +86,25 @@ public class ImageProcessingService {
             ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
             Mat hierarchy = new Mat();
 
-            //TRATAR erro caso ache mais q 2
-            while(contours.size() < 2){
 
-                contours = new ArrayList<MatOfPoint>();
-                hierarchy = new Mat();
+            contours = new ArrayList<MatOfPoint>();
+            hierarchy = new Mat();
 
-                //mostrar essa imagem binary
-                Imgproc.threshold(imgToProcessGray, imgToProcessGray, threshold, 255, Imgproc.THRESH_BINARY);
+            //mostrar essa imagem binary
+            Imgproc.threshold(imgToProcessGray, imgToProcessGray, threshold, 255, Imgproc.THRESH_BINARY);
 
-                Imgproc.findContours(imgToProcessGray, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE); //aparentemente o findContours modifica o source
+            Imgproc.findContours(imgToProcessGray, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE); //aparentemente o findContours modifica o source
 
-                ArrayList<MatOfPoint> contoursFiltered = new ArrayList<MatOfPoint>();
+            //Filtrar pela área não é mais necessário pois não há mais fontes de luz além das desejadas atrapalhando a detecção
+            /*ArrayList<MatOfPoint> contoursFiltered = new ArrayList<MatOfPoint>();
 
-                for(MatOfPoint contour: contours) {
-                    if(Imgproc.contourArea(contour) > 40000)//400000
-                        contoursFiltered.add(contour);
-                }
-
-                contours = contoursFiltered;
-
-                threshold++;
-
+            for(MatOfPoint contour: contours) {
+                if(Imgproc.contourArea(contour) > 10000)//400000
+                    contoursFiltered.add(contour);
             }
+
+            contours = contoursFiltered;*/
+
 
             return contours;
 
@@ -129,20 +128,12 @@ public class ImageProcessingService {
 
                 numberRectangles++;
 
-                /*Rect rectangle = Imgproc.boundingRect(contour);
-
-                Mat imgRectangle = new Mat(imgToProcessGray, rectangle);
-
-                Bitmap fileLightPointsSeparatedBitmap = convertMatToBitmap(imgRectangle);
-                Util.saveBitmapToFile(fileLightPointsSeparatedBitmap, "picPointsSeparated" + CameraService.COUNT_PHOTOS + numberRectangles, CameraService.DIRECTORY);*/
-
                 Mat mask = Mat.zeros(imgToProcessGray.rows(), imgToProcessGray.cols(), CvType.CV_8UC1);
                 Imgproc.drawContours(mask, contours, numberRectangles - 1, new Scalar(255), Core.FILLED);
 
                 Mat imgContour = new Mat(imgToProcessGray.rows(), imgToProcessGray.cols(), CvType.CV_8UC1);
                 imgContour.setTo(new Scalar(0,0,0));
                 imgToProcessGray.copyTo(imgContour, mask);
-
 
                 Rect rectangle = Imgproc.boundingRect(contour);
                 Mat imgRectangle = new Mat(imgContour, rectangle);
@@ -161,20 +152,8 @@ public class ImageProcessingService {
                     intensity = intensity/tamanhoOriginal;
                 }
 
-                lightIntensityPoints.add(new Pair(rectangle.y, intensity));
+                lightIntensityPoints.add(new Pair(rectangle.x, intensity));
 
-            }
-
-            //MELHORAR ISSO, tá considerando q só tem 2
-            if(lightIntensityPoints.size() > 1) {
-                if (lightIntensityPoints.get(0).first < lightIntensityPoints.get(1).first) {
-                    processResult.setIntensityReference(lightIntensityPoints.get(0).second);
-                    processResult.setIntensity(lightIntensityPoints.get(1).second);
-                } else {
-
-                    processResult.setIntensityReference(lightIntensityPoints.get(1).second);
-                    processResult.setIntensity(lightIntensityPoints.get(0).second);
-                }
             }
 
         }catch (Exception e) {
@@ -185,30 +164,30 @@ public class ImageProcessingService {
 
     }
 
-    public ProcessResult processImage(ImageReader reader){
+    public ProcessResult processImage(ImageReader reader) throws Exception {
 
         processResult = new ProcessResult();
-
+        Image image = null;
         try {
 
             CameraService.COUNT_PHOTOS++;
-            Image image = reader.acquireLatestImage();
+            image = reader.acquireLatestImage();
 
-            ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-            byte[] bytes = new byte[buffer.remaining()];
-            buffer.get(bytes);
+            Image.Plane[] planes = image.getPlanes();
+            ByteBuffer buffer = planes[0].getBuffer();
+            int pixelStride = planes[0].getPixelStride();
+            int rowStride = planes[0].getRowStride();
+            int rowPadding = rowStride - pixelStride * image.getWidth();
+
+            Bitmap fileBitmap = Bitmap.createBitmap(image.getWidth() + rowPadding / pixelStride, image.getHeight(), Bitmap.Config.ARGB_8888);
+            fileBitmap.copyPixelsFromBuffer(buffer);
 
             Mat imgToProcess;
+            imgToProcess = convertBitmapToMat(fileBitmap);
 
             if(SAVE_IMAGES_TO_FILES) {
-
-                File file = Util.saveBytesToFile(bytes, "pic" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
-                Bitmap fileBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                imgToProcess = convertBitmapToMat(fileBitmap);
+                Util.saveBitmapToFile(fileBitmap, "pic" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
                 fileBitmap.recycle();
-
-            }else{
-                imgToProcess = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
             }
 
             Mat imgToProcessGray = new Mat();
@@ -231,11 +210,28 @@ public class ImageProcessingService {
                 bmpContoursDetected.recycle();
             }
 
-            calculateIntensityLightPoints(imgToProcessGrayOriginal, contoursDetected, OPTION_AVERAGE_INTENSITY_PER_PIXEL);
+            if(contoursDetected.size() != 2) { //É necessário que a luz de referência e de medição sejam detectadas. Nada a mais nem a menos.
+                throw new ImageProcessingException("Não é possível continuar o processamento. Número inválido de fontes de luz detectadas:" + String.valueOf(contoursDetected.size()));
+            }
 
-            image.close();
+            List<Pair<Integer,Double>> lightIntensityPoints = calculateIntensityLightPoints(imgToProcessGrayOriginal, contoursDetected, OPTION_AVERAGE_INTENSITY_PER_PIXEL);
+
+            if (lightIntensityPoints.get(0).first < lightIntensityPoints.get(1).first) {
+                processResult.setIntensityReference(lightIntensityPoints.get(0).second);
+                processResult.setIntensity(lightIntensityPoints.get(1).second);
+            } else {
+                processResult.setIntensityReference(lightIntensityPoints.get(1).second);
+                processResult.setIntensity(lightIntensityPoints.get(0).second);
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
+        } finally {
+            if(image != null) {
+                image.close();
+            }
         }
 
         return processResult;

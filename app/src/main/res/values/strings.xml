@@ -45,6 +45,10 @@
     <string name="calibration_r2">R²  = </string>
     <string name="export_dropbox_title">Dropbox</string>
     <string name="refractive_index_textview_title">Índice de Refraçao:</string>
+    <string name="message_error">Erro</string>
+    <string name="message_error_saving_configuration">Não foi possível salvar a configuração.</string>
+    <string name="message_ok_saving_configuration">Configuração salva com sucesso.</string>
+    <string name="message_ok_exporting_data">Dados exportados com sucesso.</string>
 
 </resources>
 

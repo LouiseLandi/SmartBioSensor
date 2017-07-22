@@ -9,7 +9,9 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.application.smartbiosensor.exception.CameraException;
 import com.application.smartbiosensor.service.CameraService;
 import com.application.smartbiosensor.service.ImageProcessingService;
 
@@ -52,15 +54,31 @@ public class CalibrationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        cameraService.openCamera();
-        cameraService.startBackgroundThread();
+        try {
+            cameraService.openCamera();
+            cameraService.startBackgroundThread();
+
+
+        } catch(CameraException e){
+            Toast.makeText(getContext(), e.getDescription(), Toast.LENGTH_SHORT).show();
+        } catch(Exception e){
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onPause() {
-        cameraService.closeCamera();
-        cameraService.stopBackgroundThread();
         super.onPause();
+
+        try {
+            cameraService.closeCamera();
+            cameraService.stopBackgroundThread();
+        } catch(CameraException e){
+            Toast.makeText(getContext(), e.getDescription(), Toast.LENGTH_SHORT).show();
+        } catch(Exception e){
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

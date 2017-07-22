@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.application.smartbiosensor.R;
 import com.application.smartbiosensor.database.CalibrationDAO;
@@ -80,7 +81,13 @@ public class ConfigurationActivity extends AppCompatActivity {
             configuration.setCalibration(calibration);
 
             ConfigurationDAO configurationDAO = new ConfigurationDAO(getApplicationContext());
-            configurationDAO.addConfiguration(configuration);
+            boolean configurationAdded = configurationDAO.addConfiguration(configuration);
+
+            if(configurationAdded){
+                Toast.makeText(getApplicationContext(), R.string.message_ok_saving_configuration, Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getApplicationContext(), R.string.message_error_saving_configuration, Toast.LENGTH_SHORT).show();
+            }
 
         }
     };
