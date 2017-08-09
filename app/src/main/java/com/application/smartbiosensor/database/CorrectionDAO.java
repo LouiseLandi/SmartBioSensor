@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.application.smartbiosensor.vo.Configuration;
 import com.application.smartbiosensor.vo.Correction;
 
 import java.sql.Timestamp;
@@ -43,6 +44,7 @@ public class CorrectionDAO {
         ContentValues values = new ContentValues();
         values.put(DataBaseHelper.INTENSITY_COLUMN, correction.getIntensity());
         values.put(DataBaseHelper.REFERENCE_INTENSITY_COLUMN, correction.getReferenceIntensity());
+        values.put(DataBaseHelper.CONFIGURATION_ID_COLUMN, correction.getConfiguration().getId());
 
         if(database.insert(DataBaseHelper.CORRECTION_TABLE, null, values) != -1) {
             addCorrectionResult = true;
@@ -86,7 +88,8 @@ public class CorrectionDAO {
                 new String[] { DataBaseHelper.ID_COLUMN,
                         DataBaseHelper.INTENSITY_COLUMN,
                         DataBaseHelper.REFERENCE_INTENSITY_COLUMN,
-                        DataBaseHelper.DATETIME_COLUMN},
+                        DataBaseHelper.DATETIME_COLUMN,
+                        DataBaseHelper.CONFIGURATION_ID_COLUMN},
                 whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToNext()) {
@@ -95,6 +98,10 @@ public class CorrectionDAO {
             correction.setIntensity(cursor.getDouble(1));
             correction.setReferenceIntensity(cursor.getDouble(2));
             correction.setDatetime(Timestamp.valueOf(cursor.getString(3)));
+
+            ConfigurationDAO configurationDAO = new ConfigurationDAO(context);
+            Configuration configuration = configurationDAO.getConfiguration(cursor.getLong(4));
+            correction.setConfiguration(configuration);
 
         }
         close();

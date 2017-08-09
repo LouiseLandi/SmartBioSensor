@@ -49,17 +49,17 @@
 
                 <include
                     android:id="@+id/medicao"
-                    layout="@layout/medicao"></include>
+                    layout="@layout/measure"></include>
 
 
                 <include
                     android:id="@+id/resultado_correcao"
-                    layout="@layout/resultado_correcao"
+                    layout="@layout/correction_result"
                     android:visibility="gone"></include>
 
                 <include
                     android:id="@+id/resultado_medicao"
-                    layout="@layout/resultado_medicao"
+                    layout="@layout/measurement_result"
                     android:visibility="gone"></include>
 
             </LinearLayout>

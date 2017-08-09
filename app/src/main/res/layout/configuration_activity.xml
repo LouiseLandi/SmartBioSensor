@@ -34,7 +34,7 @@
             android:id="@+id/measureConfigurationTextViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/measure_title"
+            android:text="@string/general_title"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="@dimen/article_subheading"
             android:layout_marginTop="27dp"
@@ -45,13 +45,13 @@
             android:id="@+id/numberAverageMeasureTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
             android:text="@string/number_average_measure"
             android:textColor="@color/colorMediumGrey"
             android:textSize="@dimen/textview_configuracao"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="15dp"
             android:layout_below="@+id/measureConfigurationTextViewTitle"
-            android:layout_alignParentStart="true" />
+            android:layout_toStartOf="@+id/numberAverageMeasure"
+            android:layout_marginEnd="14dp" />
 
         <EditText
             android:id="@+id/numberAverageMeasure"
@@ -64,7 +64,8 @@
             android:textColor="@color/colorMediumGrey"
             android:layout_alignBaseline="@+id/numberAverageMeasureTitle"
             android:layout_alignBottom="@+id/numberAverageMeasureTitle"
-            android:layout_alignStart="@+id/calibrationB" />
+            android:layout_alignEnd="@+id/buttonSaveConfiguration"
+            android:layout_marginEnd="12dp" />
 
         <TextView
             android:id="@+id/numberThresholdTitle"
@@ -96,12 +97,12 @@
                 android:id="@+id/calibrationConfigurationTextViewTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="171dp"
+                android:layout_marginTop="34dp"
                 android:text="@string/calibration_title"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textSize="@dimen/article_subheading"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/measureConfigurationTextViewTitle" />
+                android:layout_below="@+id/numberThreshold"
+                android:layout_alignStart="@+id/numberThresholdTitle" />
 
             <TextView
                 android:id="@+id/calibrationYTitle"

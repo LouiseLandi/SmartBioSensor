@@ -1,4 +1,4 @@
-package com.application.smartbiosensor;
+package com.application.smartbiosensor.vo;
 
 
 import com.application.smartbiosensor.util.Util;

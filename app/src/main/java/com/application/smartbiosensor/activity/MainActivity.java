@@ -1,8 +1,6 @@
 package com.application.smartbiosensor.activity;
 
 import android.Manifest;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,7 +22,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.application.smartbiosensor.ProcessResult;
+import com.application.smartbiosensor.vo.ProcessResult;
 import com.application.smartbiosensor.R;
 import com.application.smartbiosensor.database.ConfigurationDAO;
 import com.application.smartbiosensor.database.CorrectionDAO;
@@ -42,7 +40,7 @@ import com.application.smartbiosensor.vo.Measurement;
 
 import java.util.ArrayList;
 
-public class PrincipalActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_CODE = 50;
     private static final int REQUEST_EXTERNAL_STORAGE_CODE = 1;
@@ -76,14 +74,14 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.principal_activity);
+        setContentView(R.layout.main_activity);
 
         toolbar = (Toolbar) findViewById(R.id.barra_ferramentas);
         setSupportActionBar(toolbar);
 
         if (!hasFlash() || !hasCamera()) {
 
-            AlertDialog alert = new AlertDialog.Builder(PrincipalActivity.this).create();
+            AlertDialog alert = new AlertDialog.Builder(MainActivity.this).create();
             alert.setTitle(R.string.message_error);
             alert.setMessage("Seu dispositivo não possui Flash/Camera.");
                 alert.setButton(AlertDialog.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
@@ -179,23 +177,29 @@ public class PrincipalActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
-            progressBarMeasure.setVisibility(View.VISIBLE);
-            measureButton.setVisibility(View.GONE);
-            processRequest = STATE_MEASURE;
-
             CorrectionDAO correctionDAO = new CorrectionDAO(getApplicationContext());
             Correction correction = correctionDAO.getActualCorrection();
 
-            measurement = new Measurement();
-            measurement.setConfiguration(configuration);
-            measurement.setCorrection(correction);
+            if (correction == null){
+                Toast.makeText(getApplicationContext(), R.string.message_measure_factor_corretion , Toast.LENGTH_SHORT).show();
 
-            MeasurementDAO measurementDAO = new MeasurementDAO(getApplicationContext());
-            long idMeasurement = measurementDAO.addMeasurement(measurement);
-            measurement.setId(idMeasurement);
-            itemsMeasurements =  new ArrayList<ItemMeasurement>();
+            }else {
 
-            takePictures();
+                progressBarMeasure.setVisibility(View.VISIBLE);
+                measureButton.setVisibility(View.GONE);
+                processRequest = STATE_MEASURE;
+
+                measurement = new Measurement();
+                measurement.setConfiguration(configuration);
+                measurement.setCorrection(correction);
+
+                MeasurementDAO measurementDAO = new MeasurementDAO(getApplicationContext());
+                long idMeasurement = measurementDAO.addMeasurement(measurement);
+                measurement.setId(idMeasurement);
+                itemsMeasurements = new ArrayList<ItemMeasurement>();
+
+                takePictures();
+            }
 
         }
     };
@@ -259,6 +263,7 @@ public class PrincipalActivity extends AppCompatActivity {
                         Correction correction = new Correction();
                         correction.setIntensity(processResult.getIntensity());
                         correction.setReferenceIntensity(processResult.getIntensityReference());
+                        correction.setConfiguration(configuration);
 
                         CorrectionDAO correctionDAO = new CorrectionDAO(getApplicationContext());
                         correctionDAO.addCorrection(correction);

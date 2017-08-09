@@ -17,6 +17,7 @@
     <string name="action_correction">Medir Correção</string>
     <string name="correction_title">Correção</string>
     <string name="measure_title">Medição</string>
+    <string name="general_title">Geral</string>
     <string name="tab_measure_title">Medição</string>
     <string name="tab_detail_title">Detalhes</string>
     <string name="tab_calibration_title">Calibração</string>
@@ -30,7 +31,7 @@
     <string name="action_discard_calibration">Descartar</string>
     <string name="action_save_calibration">Salvar</string>
     <string name="action_calibration">Calibrar</string>
-    <string name="number_average_measure">Nº de Médias:</string>
+    <string name="number_average_measure">Nº de Médias (Medição):</string>
     <string name="number_average_calibration">Nº de Médias na Calibração:</string>
     <string name="number_threshold">Threshold:</string>
     <string name="action_save_configuration">Salvar</string>
@@ -49,6 +50,7 @@
     <string name="message_error_saving_configuration">Não foi possível salvar a configuração.</string>
     <string name="message_ok_saving_configuration">Configuração salva com sucesso.</string>
     <string name="message_ok_exporting_data">Dados exportados com sucesso.</string>
+    <string name="message_measure_factor_corretion">Meça ao menos uma vez o fator de correção antes de realizar uma medição.</string>
 
 </resources>
 

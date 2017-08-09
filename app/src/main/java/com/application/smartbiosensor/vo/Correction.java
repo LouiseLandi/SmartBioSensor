@@ -8,6 +8,7 @@ public class Correction {
     private double intensity;
     private double referenceIntensity;
     private Timestamp Datetime;
+    private Configuration configuration;
 
     public long getId() {
         return id;
@@ -44,4 +45,13 @@ public class Correction {
     public double getFactor(){
         return getIntensity()/getReferenceIntensity();
     }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
 }

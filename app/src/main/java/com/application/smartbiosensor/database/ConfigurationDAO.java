@@ -93,7 +93,8 @@ public class ConfigurationDAO {
                 new String[] { DataBaseHelper.ID_COLUMN,
                         DataBaseHelper.NUMBER_AVERAGE_MEASURE_COLUMN,
                         DataBaseHelper.NUMBER_THRESHOLD_COLUMN,
-                        DataBaseHelper.DATETIME_COLUMN},
+                        DataBaseHelper.DATETIME_COLUMN,
+                        DataBaseHelper.CALIBRATION_ID_COLUMN},
                 whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToNext()) {
@@ -102,6 +103,10 @@ public class ConfigurationDAO {
             configuration.setNumberAverageMeasure(cursor.getInt(1));
             configuration.setNumberThreshold(cursor.getInt(2));
             configuration.setDatetime(Timestamp.valueOf(cursor.getString(3)));
+
+            CalibrationDAO calibrationDAO = new CalibrationDAO(context);
+            Calibration calibration = calibrationDAO.getCalibration(cursor.getLong(4));
+            configuration.setCalibration(calibration);
 
         }
         close();

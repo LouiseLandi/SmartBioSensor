@@ -1,14 +1,11 @@
 package com.application.smartbiosensor.service;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.media.Image;
 import android.media.ImageReader;
-import android.util.DisplayMetrics;
 import android.util.Pair;
 
-import com.application.smartbiosensor.ProcessResult;
+import com.application.smartbiosensor.vo.ProcessResult;
 import com.application.smartbiosensor.exception.ImageProcessingException;
 import com.application.smartbiosensor.util.Util;
 import com.application.smartbiosensor.vo.Configuration;
@@ -18,14 +15,11 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;

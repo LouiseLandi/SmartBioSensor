@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.application.smartbiosensor.LinearRegressionResult;
 import com.application.smartbiosensor.vo.Calibration;
 
 import java.sql.Timestamp;

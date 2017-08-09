@@ -118,7 +118,9 @@ public class ExportActivity extends AppCompatActivity {
                             "ID Medição" + separator +
                             "ID Configuração" + separator +
                             "Nº de Médias" + separator +
-                            "Threshold";
+                            "Threshold" + separator +
+                            "Calibração" + separator +
+                            "Índice de Refração";
 
                     myOutWriter.append(headerLine);
 
@@ -132,10 +134,20 @@ public class ExportActivity extends AppCompatActivity {
                                 correction.getDatetime().toString() + separator +
                                 String.valueOf(correction.getIntensity()).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator) + separator +
                                 String.valueOf(correction.getReferenceIntensity()).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator) + separator +
-                                String.valueOf(correction.getFactor()).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator);
+                                String.valueOf(correction.getFactor()).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator) +
+                                separator +
+                                separator +
+                                separator +
+                                String.valueOf(correction.getConfiguration().getId()) +
+                                separator +
+                                String.valueOf(correction.getConfiguration().getNumberThreshold()) +
+                                separator +
+                                "y = " + String.valueOf(correction.getConfiguration().getCalibration().getA()) + "x + " + String.valueOf(correction.getConfiguration().getCalibration().getB());
 
                         myOutWriter.append(System.lineSeparator());
                         myOutWriter.append(correctionLine);
+
+                        double refractiveIndex = measurement.getConfiguration().getCalibration().getXGivenYRounded(measurement.getAverageFactor() / correction.getFactor());
 
                         String measurementLine = String.valueOf(measurement.getId()) + separator +
                                 "Medição" + separator +
@@ -148,7 +160,9 @@ public class ExportActivity extends AppCompatActivity {
                                 empty + separator +
                                 String.valueOf(measurement.getConfiguration().getId()) + separator +
                                 String.valueOf(measurement.getConfiguration().getNumberAverageMeasure()) + separator +
-                                String.valueOf(measurement.getConfiguration().getNumberThreshold());
+                                String.valueOf(measurement.getConfiguration().getNumberThreshold()) + separator +
+                                "y = " + String.valueOf(measurement.getConfiguration().getCalibration().getA()) + "x + " + String.valueOf(measurement.getConfiguration().getCalibration().getB()) + separator +
+                                String.valueOf(refractiveIndex).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator);
 
                         myOutWriter.append(System.lineSeparator());
                         myOutWriter.append(measurementLine);
