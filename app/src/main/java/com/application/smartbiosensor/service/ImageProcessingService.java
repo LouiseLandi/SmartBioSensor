@@ -53,6 +53,27 @@ public class ImageProcessingService {
         return bmp;
     }
 
+    private Mat convertMatToGrayScale(Mat imgToProcess){
+        Mat imgToProcessGray = new Mat();
+        Imgproc.cvtColor(imgToProcess, imgToProcessGray, Imgproc.COLOR_BGR2GRAY);
+        return imgToProcessGray;
+    }
+
+    private Bitmap convertImageToBitmap(Image image){
+
+            Image.Plane[] planes = image.getPlanes();
+            ByteBuffer buffer = planes[0].getBuffer();
+            int pixelStride = planes[0].getPixelStride();
+            int rowStride = planes[0].getRowStride();
+            int rowPadding = rowStride - pixelStride * image.getWidth();
+
+            Bitmap fileBitmap = Bitmap.createBitmap(image.getWidth() + rowPadding / pixelStride, image.getHeight(), Bitmap.Config.ARGB_8888);
+            fileBitmap.copyPixelsFromBuffer(buffer);
+
+            return fileBitmap;
+
+    }
+
     public double calculateIntensity(Mat imgToProcess) {
 
         return Core.sumElems(imgToProcess).val[0];
@@ -89,16 +110,12 @@ public class ImageProcessingService {
 
             Imgproc.findContours(imgToProcessGray, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE); //aparentemente o findContours modifica o source
 
-            //Filtrar pela área não é mais necessário pois não há mais fontes de luz além das desejadas atrapalhando a detecção
-            /*ArrayList<MatOfPoint> contoursFiltered = new ArrayList<MatOfPoint>();
 
-            for(MatOfPoint contour: contours) {
-                if(Imgproc.contourArea(contour) > 10000)//400000
-                    contoursFiltered.add(contour);
+            if(SAVE_IMAGES_TO_FILES) {
+                Bitmap imgContoursDetectedBinaryBitmap = convertMatToBitmap(imgToProcessGray);
+                Util.saveBitmapToFile(imgContoursDetectedBinaryBitmap, "picPointsDetectedBinary" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
+                imgContoursDetectedBinaryBitmap.recycle();
             }
-
-            contours = contoursFiltered;*/
-
 
             return contours;
 
@@ -162,46 +179,39 @@ public class ImageProcessingService {
 
         processResult = new ProcessResult();
         Image image = null;
+        SAVE_IMAGES_TO_FILES = true;
         try {
 
             CameraService.COUNT_PHOTOS++;
             image = reader.acquireLatestImage();
 
-            Image.Plane[] planes = image.getPlanes();
-            ByteBuffer buffer = planes[0].getBuffer();
-            int pixelStride = planes[0].getPixelStride();
-            int rowStride = planes[0].getRowStride();
-            int rowPadding = rowStride - pixelStride * image.getWidth();
-
-            Bitmap fileBitmap = Bitmap.createBitmap(image.getWidth() + rowPadding / pixelStride, image.getHeight(), Bitmap.Config.ARGB_8888);
-            fileBitmap.copyPixelsFromBuffer(buffer);
+            Bitmap imgBitmap = convertImageToBitmap(image);
 
             Mat imgToProcess;
-            imgToProcess = convertBitmapToMat(fileBitmap);
+            imgToProcess = convertBitmapToMat(imgBitmap);
 
             if(SAVE_IMAGES_TO_FILES) {
-                Util.saveBitmapToFile(fileBitmap, "pic" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
-                fileBitmap.recycle();
+                Util.saveBitmapToFile(imgBitmap, "pic" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
+                imgBitmap.recycle();
             }
 
-            Mat imgToProcessGray = new Mat();
-            Imgproc.cvtColor(imgToProcess, imgToProcessGray, Imgproc.COLOR_BGR2GRAY);
+            Mat imgToProcessGray = convertMatToGrayScale(imgToProcess);
             Mat imgToProcessGrayOriginal = imgToProcessGray.clone(); //versão que não será alterada de forma alguma
 
             if(SAVE_IMAGES_TO_FILES) {
-                Bitmap fileGrayScaleBitmap = convertMatToBitmap(imgToProcessGray);
-                Util.saveBitmapToFile(fileGrayScaleBitmap, "picGrayScale" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
-                fileGrayScaleBitmap.recycle();
+                Bitmap imgGrayScaleBitmap = convertMatToBitmap(imgToProcessGray);
+                Util.saveBitmapToFile(imgGrayScaleBitmap, "picGrayScale" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
+                imgGrayScaleBitmap.recycle();
             }
 
             ArrayList<MatOfPoint> contoursDetected = detectContoursLightPoints(imgToProcessGray);
 
-            Imgproc.drawContours(imgToProcess, contoursDetected, -1, new Scalar(0, 255, 0), 3);
-
             if(SAVE_IMAGES_TO_FILES) {
-                Bitmap bmpContoursDetected = convertMatToBitmap(imgToProcess);
-                Util.saveBitmapToFile(bmpContoursDetected, "picPointsDetected" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
-                bmpContoursDetected.recycle();
+                imgToProcess = imgToProcessGrayOriginal;
+                Imgproc.drawContours(imgToProcess, contoursDetected, -1, new Scalar(0, 255, 0), 3);
+                Bitmap imgContoursDetectedBitmap = convertMatToBitmap(imgToProcess);
+                Util.saveBitmapToFile(imgContoursDetectedBitmap, "picPointsDetected" + CameraService.COUNT_PHOTOS, CameraService.DIRECTORY);
+                imgContoursDetectedBitmap.recycle();
             }
 
             if(contoursDetected.size() != 2) { //É necessário que a luz de referência e de medição sejam detectadas. Nada a mais nem a menos.

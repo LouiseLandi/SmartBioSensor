@@ -134,14 +134,13 @@ public class ExportActivity extends AppCompatActivity {
                                 correction.getDatetime().toString() + separator +
                                 String.valueOf(correction.getIntensity()).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator) + separator +
                                 String.valueOf(correction.getReferenceIntensity()).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator) + separator +
-                                String.valueOf(correction.getFactor()).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator) +
+                                String.valueOf(correction.getFactor()).replace(doubleDecimalPlaceSeparator, excelDecimalPlaceSeparator) + separator +
                                 separator +
                                 separator +
                                 separator +
-                                String.valueOf(correction.getConfiguration().getId()) +
+                                String.valueOf(correction.getConfiguration().getId()) + separator +
                                 separator +
-                                String.valueOf(correction.getConfiguration().getNumberThreshold()) +
-                                separator +
+                                String.valueOf(correction.getConfiguration().getNumberThreshold()) + separator +
                                 "y = " + String.valueOf(correction.getConfiguration().getCalibration().getA()) + "x + " + String.valueOf(correction.getConfiguration().getCalibration().getB());
 
                         myOutWriter.append(System.lineSeparator());

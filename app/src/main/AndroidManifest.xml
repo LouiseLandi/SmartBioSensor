@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MeasurementActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -40,7 +40,7 @@ import com.application.smartbiosensor.vo.Measurement;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MeasurementActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_CODE = 50;
     private static final int REQUEST_EXTERNAL_STORAGE_CODE = 1;
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (!hasFlash() || !hasCamera()) {
 
-            AlertDialog alert = new AlertDialog.Builder(MainActivity.this).create();
+            AlertDialog alert = new AlertDialog.Builder(MeasurementActivity.this).create();
             alert.setTitle(R.string.message_error);
             alert.setMessage("Seu dispositivo não possui Flash/Camera.");
                 alert.setButton(AlertDialog.BUTTON_POSITIVE,"OK", new DialogInterface.OnClickListener() {
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if(itemsMeasurements.size() == configuration.getNumberAverageMeasure()) {
                             measurement.setItemsMeasurements(itemsMeasurements);
-                            showMeasurementResults(processResult);
+                            showMeasurementResults();
                         }
 
 
@@ -306,8 +306,9 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    private void showMeasurementResults(final ProcessResult processResult){
+    private void showMeasurementResults(){
 
+        final ProcessResult processResult = new ProcessResult();
 
         double averageMeasureFactor = 0;
         double actualCorrectionFactor = 0;
